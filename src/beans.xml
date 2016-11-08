@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xsi:schemaLocation="http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/data/mongo
+          http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd
+          http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<context:annotation-config />
+
+	<!-- Configure the Mongo Server -->
+	<bean id="uri" class="com.mongodb.MongoClientURI">
+		<constructor-arg name="uri"
+			value="mongodb://root:12345@ds145997.mlab.com:45997/currency_fixer" />
+	</bean>
+	<bean id="mongo" class="com.mongodb.MongoClient">
+		<constructor-arg name="uri" ref="uri" />
+	</bean>
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg ref="mongo" />
+		<constructor-arg name="databaseName" value="currency_fixer" />
+	</bean>
+	
+	
+	<mongo:repositories base-package="tel_ran.currencies.repo"></mongo:repositories>
+	<bean class="tel_ran.currencies.model.dao.CurrenciesMongo"/>
+	
+	<bean class="tel_ran.security.accounts.Account"></bean>
+	<mongo:repositories base-package="tel_ran.security.accounts.repo"></mongo:repositories>
+	
+</beans>
